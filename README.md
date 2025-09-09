@@ -1,79 +1,88 @@
-[![Python Template for IDS706](https://github.com/josephong610/JDS706_DE_Wk1.2/actions/workflows/main.yml/badge.svg)](https://github.com/josephong610/JDS706_DE_Wk1.2/actions/workflows/main.yml)
+[![Python CI](https://github.com/josephong610/JDS706_DE_Wk1.2/actions/workflows/python-ci.yml/badge.svg)](https://github.com/josephong610/JDS706_DE_Wk1.2/actions/workflows/python-ci.yml)
 
 # JDS706_DE_Wk1.2
 
-## Python Template Overview
-This is the first homework for **IDS 706: Data Engineering Systems**.  
-It includes:
+## Repository Overview
+This repository is designed to explore consumer behavior data using Python. It contains scripts for data inspection, cleaning, grouping, machine learning experiments, and visualization. The repository also includes automated testing and linting setup to ensure reproducibility and maintain code quality.
 
-- A Python script with simple functions (`hello.py`)
-- Unit tests with `pytest` (`test_hello.py`)
-- Code formatting with `black` and linting with `flake8`
-- A `Makefile` for setup, testing, formatting, and cleanup
-- CI with GitHub Actions
+- `data.py` – main analysis script (data inspection, cleaning, grouping, ML, visualization)  
+- `data_test.py` – test cases for validating data processing and model pipeline  
+- `requirements.txt` – list of dependencies for reproducibility  
+- `Makefile` – automation for installing, formatting, linting, and testing  
+
+## Goal of the Project
+The goal of this project is to analyze factors such as **education level, income level, age, and time to decision** to uncover trends in consumer purchasing behavior. The focus is on identifying which groups of customers are more likely to spend on necessities, make impulsive purchases, or plan their purchases ahead of time.
+
+## Data Source and Structure
+The dataset (`Ecommerce_Consumer_Behavior_Analysis_Data.csv`) contains a comprehensive collection of consumer behavior features, including demographics, purchase behavior, satisfaction ratings, loyalty indicators, and decision-making metrics. This makes it well-suited for market segmentation, predictive modeling, and understanding customer decision-making.
+
+### Example of Dataset Structure
+
+| Customer_ID | Age | Gender | Income_Level | Education_Level | Purchase_Amount | Purchase_Intent | Time_to_Decision | Customer_Satisfaction |
+|-------------|-----|--------|--------------|----------------|-----------------|-----------------|------------------|-----------------------|
+| 1001        | 25  | Male   | Low          | High School    | 120.50          | Impulsive       | 2                | 8                     |
+| 1002        | 34  | Female | Middle       | Bachelor's     | 340.00          | Planned         | 5                | 9                     |
+| 1003        | 42  | Male   | High         | Master's       | 580.75          | Needs-based     | 7                | 7                     |
 
 ---
 
-## Setup Instructions
+## Setup Process
 
-1. **Clone the repository**
+1. Clone the repository:
    ```bash
    git clone https://github.com/josephong610/JDS706_DE_Wk1.2.git
+   cd JDS706_DE_Wk1.2
    ```
 
-2. **Setup Python Environment**
+2. Install dependencies:
    ```bash
-   python3 -m venv ~/.IDS706_python_template
-   source ~/.IDS706_python_template/bin/activate
+   make install
    ```
 
-3. **Makefile commands**
+3. Format and lint code:
    ```bash
-   make install    # install dependencies
-   make format     # format code
-   make lint       # lint code
-   make test       # run tests
-   make clean      # remove temporary files
+   make format
+   make lint
    ```
 
----
-
-## Usage
-
-1. **Run the main script**
-   ```bash
-   python3 hello.py   # This has a function for welcoming someone using their name and another function that simply multiplies two numbers together
-   ```
-   Expected output:
-   ```
-   Hello, Prof. Yu, welcome to Data Engineering Systems (IDS 706)!
-   2 * 3 = 6
-   ```
-
-2. **Use functions in Python**
-   ```python
-   from hello import say_hello, multiply
-
-   print(say_hello("Joseph"))
-   print(multiply(5, 4))
-   ```
-
-3. **Run tests**
+4. Run tests:
    ```bash
    make test
    ```
 
 ---
 
-## Project Structure
+## Usage
+
+To run the main analysis script:
+
+```bash
+python data.py
 ```
-hello.py        # Main script with functions
-test_hello.py   # Unit tests
-requirements.txt
-Makefile
-README.md
-```
+
+This will:
+- Inspect and clean the dataset  
+- Perform grouping and summary statistics  
+- Train an XGBoost model to predict purchase amount  
+- Generate and save visualizations (`actual_vs_predicted.png`, `feature_importance_scores.png`)  
 
 ---
 
-This project includes **automated CI/CD**, so linting and tests run automatically on every push via GitHub Actions.
+## Visualizations
+The project generates:
+- **Scatter plots** of actual vs. predicted purchase amounts  
+- **Feature importance bar charts** showing which features (e.g., age, satisfaction, time to decision) most influence purchase amount  
+
+Plots are saved in the project directory as `.png` files for reporting.
+
+---
+
+## Target Audience
+- **Data scientists & analysts** exploring consumer behavior  
+- **Marketers** aiming to segment customers and improve targeting  
+- **Researchers** studying factors that influence consumer decision-making  
+
+---
+
+## License
+This project is for educational purposes as part of **JDS706 Data Engineering** coursework.
