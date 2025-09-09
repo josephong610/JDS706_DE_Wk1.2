@@ -4,4 +4,7 @@ pytest
 click
 black
 pytest-cov
-pandas
+pandas==2.2.2
+matplotlib
+scikit-learn
+xgboost
