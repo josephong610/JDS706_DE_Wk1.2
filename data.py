@@ -12,10 +12,10 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 # ===== Inspecting the Data =====
 df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
-#Observing the top of the dataset
+# Observing the top of the dataset
 print(df.head())
 
-#Inspecting the data
+# Inspecting the data
 print(df.info())
 print(df.describe())
 
@@ -96,6 +96,7 @@ plt.xlabel("Actual Purchase Amount")
 plt.ylabel("Predicted Purchase Amount")
 plt.legend()
 plt.tight_layout()
+plt.savefig("actual_vs_predicted.png", dpi=300)
 plt.show()
 
 # Feature importance from the trained model
@@ -107,5 +108,6 @@ plt.barh(features, importances, color="skyblue", edgecolor="k")
 plt.xlabel("Importance Score")
 plt.title("Feature Importance in Predicting Purchase Amount")
 plt.tight_layout()
+plt.savefig("feature_importance_scores.png", dpi=300)
 plt.show()
 
