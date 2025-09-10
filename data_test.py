@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Made with help of ChatGPT
-
+@pytest.fixture
 def df():
     return pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
 
