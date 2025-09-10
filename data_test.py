@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 def test_dataset_loads():
     """Dataset should not be empty and must contain expected columns."""
+
     df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
     assert not df.empty
     expected_cols = {"Customer_ID", "Purchase_Amount", "Age", "Time_to_Decision", "Customer_Satisfaction"}
@@ -13,6 +14,7 @@ def test_dataset_loads():
 
 def test_purchase_amount_cleaning():
     """Purchase_Amount should be numeric after cleaning."""
+
     df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
     df["Purchase_Amount"] = (
         df["Purchase_Amount"].astype(str)
@@ -25,6 +27,7 @@ def test_purchase_amount_cleaning():
 
 def test_groupby_summary():
     """Grouped summary should return correct columns and non-empty result."""
+    
     df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
     df["Purchase_Amount"] = (
         df["Purchase_Amount"].astype(str)

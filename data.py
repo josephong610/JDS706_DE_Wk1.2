@@ -38,6 +38,7 @@ df["Purchase_Amount"] = (
     .astype(float)                            # convert to float
 )
 
+# Finding things like mean, median, and counts for certain columns
 grouped = df.groupby(["Gender", "Income_Level", "Education_Level"]).agg(
     Time_to_Decision_mean=("Time_to_Decision", "mean"),
     Time_to_Decision_median=("Time_to_Decision", "median"),
@@ -53,10 +54,12 @@ print(grouped.head(20))
 X = df[["Age", "Time_to_Decision", "Customer_Satisfaction"]]
 y = df["Purchase_Amount"]
 
+# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
+# Training the model
 model = XGBRegressor(
     n_estimators=200,
     learning_rate=0.1,
@@ -65,8 +68,10 @@ model = XGBRegressor(
 )
 model.fit(X_train, y_train)
 
+# Predictions
 y_pred = model.predict(X_test)
 
+# Calculate MSE and RMSE
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_test, y_pred)
