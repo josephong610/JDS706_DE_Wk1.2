@@ -5,12 +5,10 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Reuse the same CSV file path
-CSV_PATH = "Ecommerce_Consumer_Behavior_Analysis_Data.csv"
+# Made with help of ChatGPT
 
-@pytest.fixture
 def df():
-    return pd.read_csv(CSV_PATH)
+    return pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
 
 def test_dataset_loads(df):
     """Dataset should not be empty and must contain expected columns."""

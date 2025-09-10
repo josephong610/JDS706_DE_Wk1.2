@@ -38,7 +38,6 @@ df["Purchase_Amount"] = (
     .astype(float)                            # convert to float
 )
 
-
 grouped = df.groupby(["Gender", "Income_Level", "Education_Level"]).agg(
     Time_to_Decision_mean=("Time_to_Decision", "mean"),
     Time_to_Decision_median=("Time_to_Decision", "median"),
@@ -51,13 +50,6 @@ print("\n=== Grouped Summary ===")
 print(grouped.head(20))
 
 # ===== Exploring Machine Learning Algorithms with XGBoost =====
-df["Purchase_Amount"] = (
-    df["Purchase_Amount"]
-    .astype(str)
-    .str.replace(r"[\$,]", "", regex=True)
-    .astype(float)
-)
-
 X = df[["Age", "Time_to_Decision", "Customer_Satisfaction"]]
 y = df["Purchase_Amount"]
 
@@ -82,6 +74,67 @@ r2 = r2_score(y_test, y_pred)
 print("MSE:", mse)
 print("RMSE:", rmse)
 print("R²:", r2)
+
+# ===== Group-Level Analysis =====
+# Add predictions + actuals to the test set
+X_test_with_preds = X_test.copy()
+X_test_with_preds["Actual"] = y_test
+X_test_with_preds["Predicted"] = y_pred
+
+# Group by exact Age
+grouped_by_age = (
+    X_test_with_preds.groupby("Age")[["Actual", "Predicted"]]
+    .mean()
+    .reset_index()
+    .sort_values("Age")
+)
+
+print("\n=== Average Purchase Amounts by Exact Age ===")
+print(grouped_by_age.head(20))
+
+# Group by Age ranges
+X_test_with_preds["Age_Group"] = pd.cut(
+    X_test_with_preds["Age"],
+    bins=[0, 25, 35, 50, 65, 100],
+    labels=["<25", "25-35", "35-50", "50-65", "65+"]
+)
+
+grouped_by_age_group = (
+    X_test_with_preds.groupby("Age_Group")[["Actual", "Predicted"]]
+    .mean()
+    .reset_index()
+)
+
+print("\n=== Average Purchase Amounts by Age Group ===")
+print(grouped_by_age_group)
+
+# Group by Customer Satisfaction levels
+grouped_by_satisfaction = (
+    X_test_with_preds.groupby("Customer_Satisfaction")[["Actual", "Predicted"]]
+    .mean()
+    .reset_index()
+    .sort_values("Customer_Satisfaction")
+)
+
+print("\n=== Average Purchase Amounts by Customer Satisfaction ===")
+print(grouped_by_satisfaction)
+
+# Group by Time to Decision ranges
+X_test_with_preds["Decision_Time_Group"] = pd.cut(
+    X_test_with_preds["Time_to_Decision"],
+    bins=[0, 2, 5, 10, 20, 50],
+    labels=["0-2", "3-5", "6-10", "11-20", "20+"]
+)
+
+grouped_by_decision_time = (
+    X_test_with_preds.groupby("Decision_Time_Group")[["Actual", "Predicted"]]
+    .mean()
+    .reset_index()
+)
+
+print("\n=== Average Purchase Amounts by Time to Decision Group ===")
+print(grouped_by_decision_time)
+
 
 # ===== Visualization =====
 # Scatter plot: Actual vs Predicted
@@ -110,4 +163,3 @@ plt.title("Feature Importance in Predicting Purchase Amount")
 plt.tight_layout()
 plt.savefig("feature_importance_scores.png", dpi=300)
 plt.show()
-
