@@ -93,4 +93,7 @@ I generated:
 - **Scatter plots** of actual vs. predicted purchase amounts  
 - **Feature importance bar charts** showing which features (e.g., age, satisfaction, time to decision) most influence purchase amount  
 
-Plots are saved in the directory as `.png` files for reporting.
+Plots are saved in the directory as well for reporting.
+
+![Actual vs Predicted](actual_vs_predicted.png)
+![Feature Importance](feature_importance_scores.png)
