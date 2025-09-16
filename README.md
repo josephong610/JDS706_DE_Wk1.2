@@ -146,6 +146,12 @@ This makes it easy to reproduce results using make.
 
 ---
 
+## Example Test Output
+
+When running the Docker container, all tests pass:
+
+![Results in Docker](Tests_being_passed.png)
+
 
 ## README from the previous week's assignment
 I kept this part in just in case I needed to keep in the context for this assignment.
