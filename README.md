@@ -2,6 +2,154 @@
 
 # JDS706_DE_Wk1.2
 
+## Project Goal
+The goal of this assignment this week is to make sure that our code is reproducible using Docker. We want to analyze the **Ecommerce Consumer Behavior** data, focusing on how demographics (age, gender, income, education), customer satisfaction, and decision time influence purchase behavior.
+
+So far, I have
+- Cleaned and preprocessed the dataset.
+- Performed grouping and summary statistics by demographic segments.
+- Trained an **XGBoost regression model** to predict purchase amounts.
+- Evaluated model performance with MSE, RMSE, and R².
+- Produced visualizations of predictions vs actuals and feature importance.
+
+It seems that the visualizations showed that age and time to decision had the highest feature importance score compared to customer satisfaction. Our model still definitely needs work as shown by the predicted purchase amount vs actual purchase amount graph though.
+---
+
+## Environment Setup with Docker
+
+This project is fully containerized using Docker to ensure a reproducible environment.  
+The Dockerfile installs Python, project dependencies, and runs tests by default.
+
+### Step 1: Clone the repository
+```bash
+git clone https://github.com/josephong610/JDS706_DE_Wk1.2.git
+cd JDS706_DE_Wk1.2
+```
+
+### Step 2: Build the Docker image
+Run the following command from the repo root:
+```bash
+docker build -t jds706_project .
+```
+
+This command:
+1. Uses the official Python 3.12 slim image as a base.
+2. Copies the `requirements.txt` file into the container.
+3. Installs all dependencies (`pandas`, `scikit-learn`, `xgboost`, etc.).
+4. Copies the rest of the project files into the container.
+5. Sets the default command to run `pytest` so tests execute automatically.
+
+### Step 3: Run the container
+```bash
+docker run --rm jds706_project
+```
+- `--rm` removes the container after it exits, keeping things clean.
+- If all tests pass, you should see output similar to:
+  ```
+  ........                                                                 [100%]
+  8 passed in 1.76s
+  ```
+
+---
+
+## Dockerfile Contents
+
+Below is the exact `Dockerfile` used in this project:
+
+```dockerfile
+# Use an official lightweight Python image
+FROM python:3.12-slim
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy dependency file first for caching
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all project files
+COPY . .
+
+# Default command: run tests
+CMD ["pytest", "--maxfail=1", "--disable-warnings", "-q"]
+```
+
+---
+
+## Running Tests with Docker
+
+Tests in `data_test.py` validate:
+- Dataset loads correctly and required columns exist.
+- Purchase amounts are cleaned and numeric.
+- Grouped summaries return correct columns.
+- XGBoost model trains and predicts without errors.
+- Performance metrics (MSE, R²) are finite and within valid ranges.
+- Edge cases (empty dataset) are handled gracefully.
+
+By default, tests run automatically when the container starts.  
+
+You can also override the default CMD to run a shell inside the container:
+```bash
+docker run -it --rm jds706_project bash
+```
+
+Once inside:
+```bash
+pytest -vv
+```
+
+---
+
+## Project Structure
+
+The most relevant files for this week's assignment are below:
+```
+.
+├── data.py                 # Main analysis script (data cleaning, modeling, plots)
+├── data_test.py            # Unit and system tests
+├── requirements.txt        # Dependencies
+├── Dockerfile              # Docker setup (reproducible environment + test runner)
+├── Makefile                # Local + Docker workflows
+├── README.md               # Documentation
+└── Ecommerce_Consumer_Behavior_Analysis_Data.csv
+```
+
+---
+
+## Using the Makefile with Docker
+
+For convenience, this project includes a `Makefile` with common Docker commands:
+
+- **Build the Docker image**
+  ```bash
+  make docker-build
+  ```
+
+- **Run tests inside Docker**
+  ```bash
+  make docker-test
+  ```
+
+- **Open a shell inside the container (debugging)**
+  ```bash
+  make docker-shell
+  ```
+
+- **Build and test in one step**
+  ```bash
+  make docker-all
+  ```
+
+This makes it easy to reproduce results using make.
+
+---
+
+
+## README from the previous week's assignment
+I kept this part in just in case I needed to keep in the context for this assignment.
+--------------------------------------------------------------------------------------------------------------------------------------------
 ## Goal of the Assignment
 The goal of this assignment is to analyze various factors like **education level, income level, age, and time to decision** to uncover trends in consumer purchasing behavior. The focus is to identify which groups of customers are more likely to spend on necessities, make impulsive purchases, or plan their purchases ahead of time.
 
