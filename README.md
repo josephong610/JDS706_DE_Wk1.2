@@ -3,9 +3,9 @@
 # JDS706_DE_Wk1.2
 
 ## Project Goal and Real-World Relevance
-The goal of this assignment is to analyze **Ecommerce Consumer Behavior** data and predict purchase amounts using customer features such as **age, gender, income level, education, satisfaction, loyalty, and time to decision**.  
+The goal of this assignment is to analyze Ecommerce Consumer Behavior data and predict purchase amounts using customer features such as **age, gender, income level, education, satisfaction, loyalty, and time to decision**.  
 
-Predicting purchase amounts has direct real-world relevance:
+Predicting purchase amounts has direct real-world relevance since:
 - **E-commerce platforms** can use it to optimize personalized recommendations.  
 - **Marketing teams** can better allocate resources to high-value customer segments.  
 - **Customer analytics** can identify trends in impulsive vs. planned purchases.  
@@ -30,7 +30,7 @@ The website link to the Kaggle dataset is here: https://www.kaggle.com/datasets/
 ---
 
 ## Data Cleaning and Preprocessing
-Before modeling, several steps were taken to ensure **data quality and robustness**:
+Before modeling, several steps were taken to ensure that the data quality was good:
 
 1. **Cleaning purchase amounts**  
    - Removed `$` symbols and commas.  
@@ -45,7 +45,7 @@ Before modeling, several steps were taken to ensure **data quality and robustnes
 4. **Outlier handling**  
    - Winsorized numeric columns (`Purchase_Amount`, `Age`, `Time_to_Decision`, `Customer_Satisfaction`, `Product_Rating`, `Time_Spent_on_Product_Research(hours)`, `Frequency_of_Purchase`) at the **1st and 99th percentiles** to reduce the influence of extreme values.  
 
-These steps ensured that the machine learning model was trained on **clean, representative, and stable data**.
+These steps ensured that the machine learning model was trained on clean and stable data. Otherwise the xgboost algorithm may not be as accurate as we want it to be.
 
 ---
 
@@ -57,7 +57,7 @@ To better understand the dataset, grouped summaries were computed by demographic
 - **Counts of Engagement with Ads**  
 - **Number of Customers per Group**
 
-This gave us insight into **how spending and decision-making vary across different demographic groups**.
+This gave us insight into how spending and decision-making vary across different demographic groups. This table can be found by running (`data.py`).
 
 ---
 
@@ -80,10 +80,10 @@ After splitting the data (80% train, 20% test), we evaluated performance:
 - **R²:** `-0.36`  
 
 🔎 **Interpretation:**  
-- The **RMSE of ~154** means that predictions are, on average, off by about $154 from the true purchase amounts.  
-- The **negative R²** indicates that the model currently performs worse than a simple baseline (predicting the mean purchase amount for everyone).  
+- The RMSE of ~154 means that predictions are, on average, off by about $154 from the true purchase amounts so there can still be a lot of improvement to the model. And unfortunately, the high MSE shows that our model is not really good for predicting the prices. Perhaps the explanatory variabels I picked are not very informative of the prices.
+- The negative R² indicates that the model currently performs worse than a simple baseline (predicting the mean purchase amount for everyone).
 
-This highlights the **challenge of predicting spending behavior** — additional feature engineering or alternative models are needed.
+This highlights the challenge of predicting spending behavior. If I were to continue working on this analysis, then I would need additional explanatory variables or look for a different method to answer this question.
 
 ---
 
@@ -93,27 +93,27 @@ Several visualizations were generated to evaluate the model and interpret result
 1. **Scatter Plot of Actual vs. Predicted Values**  
    ![Actual vs Predicted](actual_vs_predicted.png)  
    - Shows where predictions deviate from the 1:1 line.  
-   - Clear evidence that predictions often miss actual values by a wide margin.  
+   - Unfortunately shows that predictions often miss actual values by a wide margin.  
 
 2. **Feature Importance Bar Chart**  
    ![Feature Importance](feature_importance_scores.png)  
    - Indicates which features had the most influence.  
-   - `Age` and `Time_to_Decision` were most important, followed by satisfaction and loyalty.  
+   - `Age` and `Frequency of Purchase` seems to be the most important here.
 
 3. **Error Distribution Histogram**  
    ![Error Distribution](error_distribution.png)  
    - Plots the distribution of `(Actual – Predicted)` errors.  
-   - Errors center near 0 but are wide, confirming poor model accuracy.  
+   - Errors center near 0 but is very wide, so it unfortunately shows some poor model accuracy.  
 
 4. **Residual Plot**  
    ![Residual Plot](residual_plot.png)  
    - Residuals vs. Predicted values.  
-   - No clear linear trend, but very high variance across the prediction range.  
+   - There were no clear linear trend, but very high variance across the prediction range.  
 
 5. **Average Actual vs Predicted by Age Group**  
    ![Average Actual vs Predicted by Age Group](avg_actual_vs_predicted_Age_Group.png)  
    - Groups customers into age bands (`<25`, `25-35`, `35-50`, `50-65`).  
-   - Shows that the model consistently **underestimates purchase amounts** across most age groups.  
+   - Shows that the model consistently underestimates purchase amounts across most age groups. I am showing the 50-65 age group to show that there are no people in that age group in my dataset.  
    - The discrepancy is largest in the **25–35 group**, where predicted averages are well below actual averages.  
 
 These plots show that while some signal exists in the data, the model still struggles to generalize.
@@ -121,8 +121,8 @@ These plots show that while some signal exists in the data, the model still stru
 ---
 
 ## Results and Discussion
-- **Feature importance** suggests that **age and decision time** are the strongest predictors of spending.  
-- **Customer satisfaction** mattered less than expected, which might indicate non-linear relationships.  
+- **Feature importance** suggests that **age and frequency of purchase** are the strongest predictors of spending.  
+- **Product Rating** mattered less than expected, which might indicate non-linear relationships.  
 - **Model accuracy was poor**, showing the difficulty of predicting purchase amounts with only demographic and decision-related features.  
 - Future improvements could include:
   - Adding more features (engagement, loyalty, ad influence).  
@@ -188,6 +188,7 @@ make docker-test
 ---
 
 ## Project Structure
+These are the most important files that you will need in this repository.
 ```
 .
 ├── data.py                 # Main analysis (cleaning, modeling, visualization)
@@ -223,9 +224,17 @@ For the refactoring aspect, the first versions of the (`data.py`) mixed data cle
 
 
 ## Requirements for this assignment
-I made sure to include the CI integration (although it was implemented previously as well), refactored my code in both the (`data.py`) and the (`data_test.py`) files. I also used black for formatting and flake8 for linting in the Makefile. 
+I made sure to include the CI integration (although it was implemented previously as well), refactored my code in both the (`data.py`) and the (`data_test.py`) files. I also used black for formatting and flake8 for linting in the Makefile. I also increased the number of explanatory variables that I am looking at for this assignment to enhance my ML procedure.
 
+## Screenshots
+   ![Before refactoring](Before.png)  
+   - This was before refactoring and there were no helper functions in the beginning. Also my code is pretty long so I only took a screen shot of the first 50 lines but you can see the changes even from the screenshots.
 
+   ![After refactoring](After.png)  
+   - This was after refactoring and you can see that it's organized into functions that have clearly defined roles.
+
+   ![Workflow](Workflow.png)  
+   - This shows that the CI workflow is running successfully.
 
 ## Conclusion
 This project demonstrated the full pipeline of:
