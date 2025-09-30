@@ -14,6 +14,21 @@ By modeling consumer behavior, businesses can uncover insights into what drives 
 
 ---
 
+## Data Source and Structure
+The dataset (`Ecommerce_Consumer_Behavior_Analysis_Data.csv`) contains a collection of consumer behavior features, like demographics, purchase behavior, satisfaction ratings, loyalty indicators, and decision-making metrics. The table below shows an example of what the columns look like. (Although there are more columns in the actual file)
+
+The website link to the Kaggle dataset is here: https://www.kaggle.com/datasets/salahuddinahmedshuvo/ecommerce-consumer-behavior-analysis-data
+
+### Example of Dataset Structure
+
+| Customer_ID | Age | Gender | Income_Level | Education_Level | Purchase_Amount | Purchase_Intent | Time_to_Decision | Customer_Satisfaction |
+|-------------|-----|--------|--------------|----------------|-----------------|-----------------|------------------|-----------------------|
+| 1001        | 25  | Male   | Low          | High School    | 120.50          | Impulsive       | 2                | 8                     |
+| 1002        | 34  | Female | Middle       | Bachelor's     | 340.00          | Planned         | 5                | 9                     |
+| 1003        | 42  | Male   | High         | Master's       | 580.75          | Needs-based     | 7                | 7                     |
+
+---
+
 ## Data Cleaning and Preprocessing
 Before modeling, several steps were taken to ensure **data quality and robustness**:
 
@@ -94,6 +109,12 @@ Several visualizations were generated to evaluate the model and interpret result
    ![Residual Plot](residual_plot.png)  
    - Residuals vs. Predicted values.  
    - No clear linear trend, but very high variance across the prediction range.  
+
+5. **Average Actual vs Predicted by Age Group**  
+   ![Average Actual vs Predicted by Age Group](avg_actual_vs_predicted_Age_Group.png)  
+   - Groups customers into age bands (`<25`, `25-35`, `35-50`, `50-65`).  
+   - Shows that the model consistently **underestimates purchase amounts** across most age groups.  
+   - The discrepancy is largest in the **25–35 group**, where predicted averages are well below actual averages.  
 
 These plots show that while some signal exists in the data, the model still struggles to generalize.
 
