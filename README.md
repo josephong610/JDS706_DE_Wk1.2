@@ -120,6 +120,17 @@ These plots show that while some signal exists in the data, the model still stru
 
 ---
 
+## Results and Discussion
+- **Feature importance** suggests that **age and decision time** are the strongest predictors of spending.  
+- **Customer satisfaction** mattered less than expected, which might indicate non-linear relationships.  
+- **Model accuracy was poor**, showing the difficulty of predicting purchase amounts with only demographic and decision-related features.  
+- Future improvements could include:
+  - Adding more features (engagement, loyalty, ad influence).  
+  - Trying alternative models (Random Forest, Neural Nets).  
+  - Hyperparameter tuning of XGBoost.  
+
+---
+
 ## Environment Setup with Docker
 This project is **fully containerized** using Docker to ensure reproducibility.
 
@@ -207,16 +218,14 @@ For convenience, the project includes a Makefile:
 
 ---
 
-## Results and Discussion
-- **Feature importance** suggests that **age and decision time** are the strongest predictors of spending.  
-- **Customer satisfaction** mattered less than expected, which might indicate non-linear relationships.  
-- **Model accuracy was poor**, showing the difficulty of predicting purchase amounts with only demographic and decision-related features.  
-- Future improvements could include:
-  - Adding more features (engagement, loyalty, ad influence).  
-  - Trying alternative models (Random Forest, Neural Nets).  
-  - Hyperparameter tuning of XGBoost.  
+## Refactoring
+For the refactoring aspect, the first versions of the (`data.py`) mixed data cleaning, feature engineering, and modeling in long code blocks. I broke them down to functions with clearly defined responsibilities (e.g., cleaning, grouping, training, evaluation) so that it looks cleaner and can be called at any time. I also renamed variables like "df" to be "consumer_df" so that it's more descriptive and future users can know what the df holds. The **Makefile** was also expanded to standardize workflows for both local and Docker environments. Further, redundant code in tests was either deleted or put into functions so that the code looks cleaner.
 
----
+
+## Requirements for this assignment
+I made sure to include the CI integration (although it was implemented previously as well), refactored my code in both the (`data.py`) and the (`data_test.py`) files. I also used black for formatting and flake8 for linting in the Makefile. 
+
+
 
 ## Conclusion
 This project demonstrated the full pipeline of:
