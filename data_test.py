@@ -14,8 +14,11 @@ def test_dataset_loads():
     df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
     assert not df.empty
     expected_cols = {
-        "Customer_ID", "Purchase_Amount", "Age",
-        "Time_to_Decision", "Customer_Satisfaction"
+        "Customer_ID",
+        "Purchase_Amount",
+        "Age",
+        "Time_to_Decision",
+        "Customer_Satisfaction",
     }
     assert expected_cols.issubset(df.columns)
 
@@ -35,14 +38,20 @@ def test_groupby_summary():
     df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
     df = clean_purchase_amount(df)
 
-    grouped = df.groupby(["Gender", "Income_Level", "Education_Level"]).agg(
-        Time_to_Decision_mean=("Time_to_Decision", "mean"),
-        Avg_Purchase_Amount=("Purchase_Amount", "mean"),
-        Count=("Customer_ID", "count")
-    ).reset_index()
+    grouped = (
+        df.groupby(["Gender", "Income_Level", "Education_Level"])
+        .agg(
+            Time_to_Decision_mean=("Time_to_Decision", "mean"),
+            Avg_Purchase_Amount=("Purchase_Amount", "mean"),
+            Count=("Customer_ID", "count"),
+        )
+        .reset_index()
+    )
 
     assert not grouped.empty
-    assert {"Time_to_Decision_mean", "Avg_Purchase_Amount", "Count"}.issubset(grouped.columns)
+    assert {"Time_to_Decision_mean", "Avg_Purchase_Amount", "Count"}.issubset(
+        grouped.columns
+    )
 
 
 def test_model_training_and_prediction():
@@ -117,11 +126,72 @@ def test_summarize_predictions_runs():
 
 def test_empty_dataset_behavior():
     """Empty dataframe should not break cleaning logic."""
-    df = pd.DataFrame(columns=[
-        "Customer_ID", "Purchase_Amount", "Age",
-        "Time_to_Decision", "Customer_Satisfaction"
-    ])
+    df = pd.DataFrame(
+        columns=[
+            "Customer_ID",
+            "Purchase_Amount",
+            "Age",
+            "Time_to_Decision",
+            "Customer_Satisfaction",
+        ]
+    )
     df = clean_purchase_amount(df)
 
     assert df.empty
     assert "Purchase_Amount" in df.columns
+
+
+# ===================== New Tests =====================
+
+
+def test_missing_values_filled():
+    """Categorical columns should have no NaNs after filling."""
+    df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
+    df = clean_purchase_amount(df)
+
+    df["Engagement_with_Ads"] = df["Engagement_with_Ads"].fillna("No engagement")
+    df["Social_Media_Influence"] = df["Social_Media_Influence"].fillna("No engagement")
+
+    assert df["Engagement_with_Ads"].isnull().sum() == 0
+    assert df["Social_Media_Influence"].isnull().sum() == 0
+
+
+def test_outlier_clipping():
+    """Numeric columns should be clipped at the 1st and 99th percentiles."""
+    df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
+    df = clean_purchase_amount(df)
+
+    numeric_cols = [
+        "Purchase_Amount",
+        "Age",
+        "Time_to_Decision",
+        "Customer_Satisfaction",
+        "Product_Rating",
+        "Time_Spent_on_Product_Research(hours)",
+        "Frequency_of_Purchase",
+    ]
+
+    for col in numeric_cols:
+        lower, upper = df[col].quantile([0.01, 0.99])
+        clipped = df[col].clip(lower, upper)
+        assert clipped.min() >= lower
+        assert clipped.max() <= upper
+
+
+def test_error_distribution_computation():
+    """Prediction errors should be finite values."""
+    df = pd.read_csv("Ecommerce_Consumer_Behavior_Analysis_Data.csv")
+    df = clean_purchase_amount(df)
+
+    features = df[["Age", "Time_to_Decision", "Customer_Satisfaction"]]
+    target = df["Purchase_Amount"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        features, target, test_size=0.2, random_state=42
+    )
+    model = XGBRegressor(n_estimators=10, random_state=42)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    errors = y_test - y_pred
+    assert np.isfinite(errors).all()
